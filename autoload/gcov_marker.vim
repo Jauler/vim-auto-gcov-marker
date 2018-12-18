@@ -92,46 +92,52 @@ function gcov_marker#SetCov(...)
     exe ":highlight GcovPartlyCoveredText   ctermfg=yellow guifg=yellow"
     exe ":highlight GcovCoveredText   ctermfg=green guifg=green"
 
-    "Read coverage file (work only without branch coverage at the moment )
-    exe ":sign define gcov_both_covered texthl=GcovCoveredText text=" . g:gcov_marker_covered . g:gcov_marker_covered
+    " Prepare signs
     exe ":sign define gcov_line_covered texthl=GcovCoveredText text=" . g:gcov_marker_covered
-    exe ":sign define gcov_branch_uncovered texthl=GcovPartlyCoveredText text=" . g:gcov_marker_covered . g:gcov_marker_uncovered
-    exe ":sign define gcov_uncovered texthl=GcovUncoveredText text=" . g:gcov_marker_uncovered
-    exe ":sign define gcov_both_uncovered texthl=GcovUncoveredText text=" . g:gcov_marker_uncovered . g:gcov_marker_uncovered
+    exe ":sign define gcov_line_uncovered texthl=GcovUncoveredText text=" . g:gcov_marker_uncovered
+    exe ":sign define gcov_branch_covered texthl=GcovCoveredText text=" . g:gcov_marker_covered . g:gcov_marker_covered
+    exe ":sign define gcov_branch_partly_covered texthl=GcovPartlyCoveredText text=" . g:gcov_marker_covered . g:gcov_marker_uncovered
+    exe ":sign define gcov_branch_uncovered texthl=GcovUncoveredText text=" . g:gcov_marker_uncovered . g:gcov_marker_uncovered
 
+    " Read files and fillin marks dictionary
+    let marks = {}
     for line in readfile(filename)
-        if line =~ 'lcount:.*'
-            let d = split(line, ':')
-            let d = split(d[1], ',')
-            let l = substitute(d[0], " *", "", "")
-            let c = substitute(d[1], " *", "", "")
-            if '0' != c
-                exe ":sign place " . l . " line=" . l . " name=gcov_line_covered file=" . expand("%:p")
+        let type = split(line, ':')[0]
+        let linenum = split(line, '[:,]')[1]
+
+        if type == 'lcount'
+            let execcount = split(line, '[:,]')[2]
+            if execcount == '0'
+                let marks[linenum] = 'linenotexec'
             else
-                exe ":sign place " . l . " line=" . l . " name=gcov_uncovered file=" . expand("%:p")
+                let marks[linenum] = 'lineexec'
             endif
         endif
-        if line =~ 'branch:.*'
-            let d = split(line, ':')
-            let d = split(d[1], ',')
-            let l = substitute(d[0], " *", "", "")
-            let s = substitute(d[1], " *", "", "")
-            if s =~ 'taken'
-                exe ":sign place " . l . " line=" . l . " name=gcov_both_covered file=" . expand("%:p")
+
+        if type == 'branch'
+            let branchcoverage = split(line, '[:,]')[2]
+            if branchcoverage == 'notexec'
+                let marks[linenum] = 'branchnotexec'
+            elseif branchcoverage == 'taken' && (!has_key(marks, linenum) || marks[linenum] != 'branchnottaken')
+                let marks[linenum] = 'branchtaken'
+            elseif branchcoverage == 'nottaken'
+                let marks[linenum] = 'branchnottaken'
             endif
         endif
     endfor
-    for line in readfile(filename)
-        if line =~ 'branch:.*'
-            let d = split(line, ':')
-            let d = split(d[1], ',')
-            let l = substitute(d[0], " *", "", "")
-            let s = substitute(d[1], " *", "", "")
-            if s =~ 'nottaken'
-                exe ":sign place " . l . " line=" . l . " name=gcov_branch_uncovered file=" . expand("%:p")
-            elseif s =~ 'notexec'
-                exe ":sign place " . l . " line=" . l . " name=gcov_both_uncovered file=" . expand("%:p")
-            endif
+
+    " Iterate over marks dictionary and place signs
+    for [line, marktype] in items(marks)
+        if marktype == 'lineexec'
+            exe ":sign place " . line. " line=" . line . " name=gcov_line_covered file=" . expand("%:p")
+        elseif marktype == 'linenotexec'
+            exe ":sign place " . line . " line=" . line . " name=gcov_line_uncovered file=" . expand("%:p")
+        elseif marktype == 'branchtaken'
+            exe ":sign place " . line . " line=" . line . " name=gcov_branch_covered file=" . expand("%:p")
+        elseif marktype == 'branchnottaken'
+            exe ":sign place " . line . " line=" . line . " name=gcov_branch_partly_covered file=" . expand("%:p")
+        elseif marktype == 'branchnotexec'
+            exe ":sign place " . line . " line=" . line . " name=gcov_branch_uncovered file=" . expand("%:p")
         endif
     endfor
 
