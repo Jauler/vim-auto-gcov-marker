@@ -13,24 +13,24 @@ else
     if !exists("g:gcov_marker_path")
         let g:gcov_marker_path = '.'
     endif
-    if !exists("g:gcov_gcda_path")
-        let g:gcov_gcda_path = '.'
+    if !exists("g:gcov_gcno_path")
+        let g:gcov_gcno_path = '.'
     endif
 endif
 
 function gcov_marker#BuildCov(...)
     let filename = expand('%:t:r')
-    let gcda = globpath(g:gcov_gcda_path, '/**/' . filename . '.gcda', 1, 1)
-    if len(gcda) == '0'
-        echo "gcda file not found"
+    let gcno = globpath(g:gcov_gcno_path, '/**/' . filename . '.gcno', 1, 1)
+    if len(gcno) == '0'
+        echo "gcno file not found"
         return
-    elseif len(gcda) != '1'
-        echo "too many gcda files"
+    elseif len(gcno) != '1'
+        echo "too many gcno files"
         return
     endif
-    let gcda = fnamemodify(gcda[0], ':p')
+    let gcno = fnamemodify(gcno[0], ':p')
 
-    silent exe '!pushd ' . g:gcov_marker_path . '; gcov -i -b -m ' . gcda . ' > /dev/null; popd'
+    silent exe '!pushd ' . g:gcov_marker_path . '; gcov -i -b -m ' . gcno . ' > /dev/null; popd'
 
     let gcov = g:gcov_marker_path . expand('%:t') . '.gcov'
 
