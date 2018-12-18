@@ -1,0 +1,9 @@
+GcovLoad	auto_gcov_marker.txt	/*GcovLoad*
+GcovBuild	auto_gcov_marker.txt	/*GcovBuild*
+GcovClear	auto_gcov_marker.txt	/*GcovClear*
+auto-gcov-marker	auto_gcov_marker.txt	/*auto-gcov-marker*
+auto-gcov-marker-commands	auto_gcov_marker.txt	/*auto-gcov-marker-commands*
+auto-gcov-marker-configuration	auto_gcov_marker.txt	/*auto-gcov-marker-configuration*
+auto-gcov-marker-information	auto_gcov_marker.txt	/*auto-gcov-marker-information*
+auto-gcov-marker-introduction	auto_gcov_marker.txt	/*auto-gcov-marker-introduction*
+auto-gcov-marker-license	auto_gcov_marker.txt	/*auto-gcov-marker-license*

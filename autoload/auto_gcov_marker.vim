@@ -1,26 +1,26 @@
-if exists('g:autoloaded_gcov_marker') || &cp || version < 700
+if exists('g:autoloaded_auto_gcov_marker') || &cp || version < 700
     finish
 else
-    if !exists("g:gcov_marker_line_covered")
-        let g:gcov_marker_line_covered = '✓'
+    if !exists("g:auto_gcov_marker_line_covered")
+        let g:auto_gcov_marker_line_covered = '✓'
     endif
-    if !exists("g:gcov_marker_line_uncovered")
-        let g:gcov_marker_line_uncovered = '✘'
+    if !exists("g:auto_gcov_marker_line_uncovered")
+        let g:auto_gcov_marker_line_uncovered = '✘'
     endif
-    if !exists("g:gcov_marker_branch_covered")
-        let g:gcov_marker_branch_covered = '✓✓'
+    if !exists("g:auto_gcov_marker_branch_covered")
+        let g:auto_gcov_marker_branch_covered = '✓✓'
     endif
-    if !exists("g:gcov_marker_branch_partly_covered")
-        let g:gcov_marker_branch_partly_covered = '✓✘'
+    if !exists("g:auto_gcov_marker_branch_partly_covered")
+        let g:auto_gcov_marker_branch_partly_covered = '✓✘'
     endif
-    if !exists("g:gcov_marker_branch_uncovered")
-        let g:gcov_marker_branch_uncovered = '✘✘'
+    if !exists("g:auto_gcov_marker_branch_uncovered")
+        let g:auto_gcov_marker_branch_uncovered = '✘✘'
     endif
-    if !exists("g:gcov_marker_path")
-        let g:gcov_marker_path = '.'
+    if !exists("g:auto_gcov_marker_gcov_path")
+        let g:auto_gcov_marker_gcov_path = '.'
     endif
-    if !exists("g:gcov_gcno_path")
-        let g:gcov_gcno_path = '.'
+    if !exists("g:auto_gcov_marker_gcno_path")
+        let g:auto_gcov_marker_gcno_path = '.'
     endif
 
     if !hlexists('GcovLineCovered')
@@ -40,9 +40,9 @@ else
     endif
 endif
 
-function gcov_marker#BuildCov(...)
+function auto_gcov_marker#BuildCov(...)
     let filename = expand('%:t:r')
-    let gcno = globpath(g:gcov_gcno_path, '/**/' . filename . '.gcno', 1, 1)
+    let gcno = globpath(g:auto_gcov_marker_gcno_path, '/**/' . filename . '.gcno', 1, 1)
     if len(gcno) == '0'
         echo "gcno file not found"
         return
@@ -52,20 +52,20 @@ function gcov_marker#BuildCov(...)
     endif
     let gcno = fnamemodify(gcno[0], ':p')
 
-    silent exe '!(cd ' . g:gcov_marker_path . '; gcov -i -b -m ' . gcno . ') > /dev/null'
+    silent exe '!(cd ' . g:auto_gcov_marker_gcov_path . '; gcov -i -b -m ' . gcno . ') > /dev/null'
     redraw!
 
-    let gcov = g:gcov_marker_path . '/' . expand('%:t') . '.gcov'
+    let gcov = g:auto_gcov_marker_gcov_path . '/' . expand('%:t') . '.gcov'
 
-    call gcov_marker#SetCov(gcov)
+    call auto_gcov_marker#SetCov(gcov)
 endfunction
 
-function gcov_marker#ClearCov(...)
+function auto_gcov_marker#ClearCov(...)
     " FIXME: Only gcov tags should be cleared, not all of them
     exe ":sign unplace *"
 endfunction
 
-function gcov_marker#SetCov(...)
+function auto_gcov_marker#SetCov(...)
     if(a:0 == 1)
         let filename = a:1
     else
@@ -73,14 +73,14 @@ function gcov_marker#SetCov(...)
     endif
 
     " Clear previous markers.
-    call gcov_marker#ClearCov()
+    call auto_gcov_marker#ClearCov()
 
     " Prepare signs
-    exe ":sign define gcov_line_covered texthl=GcovLineCovered text=" . g:gcov_marker_line_covered
-    exe ":sign define gcov_line_uncovered texthl=GcovLineUncovered text=" . g:gcov_marker_line_uncovered
-    exe ":sign define gcov_branch_covered texthl=GcovBranchCovered text=" . g:gcov_marker_branch_covered
-    exe ":sign define gcov_branch_partly_covered texthl=GcovBranchPartlyCovered text=" . g:gcov_marker_branch_partly_covered
-    exe ":sign define gcov_branch_uncovered texthl=GcovBranchUncovered text=" . g:gcov_marker_branch_uncovered
+    exe ":sign define gcov_line_covered texthl=GcovLineCovered text=" . g:auto_gcov_marker_line_covered
+    exe ":sign define gcov_line_uncovered texthl=GcovLineUncovered text=" . g:auto_gcov_marker_line_uncovered
+    exe ":sign define gcov_branch_covered texthl=GcovBranchCovered text=" . g:auto_gcov_marker_branch_covered
+    exe ":sign define gcov_branch_partly_covered texthl=GcovBranchPartlyCovered text=" . g:auto_gcov_marker_branch_partly_covered
+    exe ":sign define gcov_branch_uncovered texthl=GcovBranchUncovered text=" . g:auto_gcov_marker_branch_uncovered
 
     " Read files and fillin marks dictionary
     let marks = {}
@@ -135,4 +135,4 @@ function gcov_marker#SetCov(...)
     let b:coveragefile = fnamemodify(filename, ':p')
 endfunction
 
-let g:autoloaded_gcov_marker = 1
+let g:autoloaded_auto_gcov_marker = 1

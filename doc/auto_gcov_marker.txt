@@ -1,15 +1,15 @@
-*gcov-marker* gcov-marker: a simple gcov display for Vim
+*auto-gcov-marker* auto-gcov-marker: a simple gcov display for Vim
 
 ==============================================================================
 Contents
 
- 1. Introduction                                |gcov-marker-introduction|
- 2. Commands                                    |gcov-marker-commands|
- 3. Information                                 |gcov-marker-info|
- 4. License                                     |gcov-marker-license|
+ 1. Introduction                                |auto-gcov-marker-introduction|
+ 2. Commands                                    |auto-gcov-marker-commands|
+ 3. Information                                 |auto-gcov-marker-info|
+ 4. License                                     |auto-gcov-marker-license|
 ==============================================================================
 
-                                                *gcov-marker-introduction*
+                                                *auto-gcov-marker-introduction*
 Introduction ~
 
 This plugin provides a simple way to build and load gcov files for an open
@@ -19,7 +19,7 @@ It does not show you detailed information about the coverage at the moment so
 you do not get detailed information like the number of hits.
 
 ------------------------------------------------------------------------------
-                                                *gcov-marker-commands*
+                                                *auto-gcov-marker-commands*
 Commands ~
 
 The *GcovLoad* command
@@ -34,7 +34,7 @@ The *GcovBuild* command
 This command can be used for all actions needed. This command searches
 recursively for gcna files representing currently active buffer in g:gcov_gcna_path
 and if it finds exactly one match - calls gcov to build intermediate representation
-of gcov file in g:gcov_marker_path directory.
+of gcov file in g:gcov_path directory.
 
 After building gcov file, This commands draws line and branch coverage
 information in vim signs column.
@@ -44,37 +44,37 @@ The *GcovClear* command
 This command clears all signs from current buffer
 
 ------------------------------------------------------------------------------
-                                                *gcov-marker-configuration*
+                                                *auto-gcov-marker-configuration*
 Configuration ~
 
 Default markers can be customized using the variables below.
 
-let g:gcov_marker_line_covered = '✓'
-let g:gcov_marker_line_uncovered = '✘'
-let g:gcov_marker_branch_covered = '✓✓'
-let g:gcov_marker_branch_partly_covered = '✓✘'
-let g:gcov_marker_branch_uncovered = '✘✘'
+let g:auto_gcov_marker_line_covered = '✓'
+let g:auto_gcov_marker_line_uncovered = '✘'
+let g:auto_gcov_marker_branch_covered = '✓✓'
+let g:auto_gcov_marker_branch_partly_covered = '✓✘'
+let g:auto_gcov_marker_branch_uncovered = '✘✘'
 
 
-Also *GcovBuild* command searches recursively for gcna files in
+Also GcovBuild command searches recursively for gcna files in
 directory prefixed by g:gcov_gcno_path variable.
 
-let g:gcov_gcno_path = 'path/to/gcno/files/'
+let g:auto_gcov_marker_gcno_path = 'path/to/gcno/files/'
 
 
-The *GcovBuild* command needs to know where to put the ".gcov" files. The
+The GcovBuild command needs to know where to put the ".gcov" files. The
 variable takes a comma seperated list of folders.
 
-let g:gcov_marker_path  = 'path/to/gcov/files/'
+let g:auto_gcov_marker_gcov_path  = 'path/to/gcov/files/'
 
 
 ------------------------------------------------------------------------------
-                                                *gcov-marker-information*
+                                                auto-gcov-marker-information*
 Information ~
 
 This is based on https://github.com/m42e/vim-gcov-marker
 
-The source is located on github: https://github.com/jauler/vim-gcov-marker
+The source is located on github: https://github.com/jauler/vim-auto-gcov-marker
 
 Please create tickets there if there were issues, and create pull requests
 with features or bugfixes.
@@ -83,7 +83,7 @@ Thanks a lot
 
 
 ------------------------------------------------------------------------------
-                                                *gcov-marker-license*
+                                                auto-gcov-marker-license*
 License ~
 
 The software is licensed under the MIT. See LICENSE file for details.
