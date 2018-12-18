@@ -12,12 +12,11 @@ Contents
                                                 *gcov-marker-introduction*
 Introduction ~
 
-This plugin provides a simple way to load and reload gcov files for an open
-source file. It will highlight the covered and uncovered lines and publish
-the uncovered lines to the location list.
+This plugin provides a simple way to build and load gcov files for an open
+source file. It will highlight the covered and uncovered lines and branchs.
 
 It does not show you detailed information about the coverage at the moment so
-you do not get detailed information like the number of hits or branches.
+you do not get detailed information like the number of hits.
 
 ------------------------------------------------------------------------------
                                                 *gcov-marker-commands*
@@ -25,18 +24,24 @@ Commands ~
 
 The *GcovLoad* command
 
-This command can be used for all actions needed. If a parameter is given
-it will be used as path to the ".gcov" file for the current buffer.
+This command loads gcov file and draws line and branch coverage information in
+vim signs column.
 
-If no argument is given, the last file used for the buffer is used.
+The first argument should be gcov file in intermediate format to load.
 
-If it is called with a bang the markers will be deleted.
+The *GcovBuild* command
 
-The *GcovFind* command
+This command can be used for all actions needed. This command searches
+recursively for gcna files representing currently active buffer in g:gcov_gcna_path
+and if it finds exactly one match - calls gcov to build intermediate representation
+of gcov file in g:gcov_marker_path directory.
 
-This command uses the value of g:gcov_marker_path to find the ".gcov" file for the current buffer.
+After building gcov file, This commands draws line and branch coverage
+information in vim signs column.
 
-If it is called with a bang the markers will be deleted.
+The *GcovClear* command
+
+This command clears all signs from current buffer
 
 ------------------------------------------------------------------------------
                                                 *gcov-marker-configuration*
@@ -44,26 +49,32 @@ Configuration ~
 
 Default markers can be customized using the variables below.
 
-let g:gcov_marker_covered    = '✓'
-let g:gcov_marker_uncovered  = 'X'
+let g:gcov_marker_line_covered = '✓'
+let g:gcov_marker_line_uncovered = '✘'
+let g:gcov_marker_branch_covered = '✓✓'
+let g:gcov_marker_branch_partly_covered = '✓✘'
+let g:gcov_marker_branch_uncovered = '✘✘'
 
-The *GcovFind* command needs to know where to look for the ".gcov" files. The
+
+Also *GcovBuild* command searches recursively for gcna files in
+directory prefixed by g:gcov_gcno_path variable.
+
+let g:gcov_gcno_path = 'path/to/gcno/files/'
+
+
+The *GcovBuild* command needs to know where to put the ".gcov" files. The
 variable takes a comma seperated list of folders.
 
 let g:gcov_marker_path  = 'path/to/gcov/files/'
 
-By default, the plugin opens the location list once uncovered lines are
-published. This behavior can be changed by setting the global variable below.
-Note that the uncovered lines will always be published to the location list.
 
-let g:gcov_marker_auto_lopen = 0
-
-Command :lopen can be used to display the list of uncovered lines in the location list.
 ------------------------------------------------------------------------------
                                                 *gcov-marker-information*
 Information ~
 
-The source is located on github: https://github.com/m42e/vim-gcov-marker
+This is based on https://github.com/m42e/vim-gcov-marker
+
+The source is located on github: https://github.com/jauler/vim-gcov-marker
 
 Please create tickets there if there were issues, and create pull requests
 with features or bugfixes.
