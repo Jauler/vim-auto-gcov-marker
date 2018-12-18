@@ -32,7 +32,7 @@ function gcov_marker#BuildCov(...)
 
     silent exe '!pushd ' . g:gcov_marker_path . '; gcov -i -b -m ' . gcno . ' > /dev/null; popd'
 
-    let gcov = g:gcov_marker_path . expand('%:t') . '.gcov'
+    let gcov = g:gcov_marker_path . '/' . expand('%:t') . '.gcov'
 
     call gcov_marker#SetCov('<bang>', gcov)
     redraw!
