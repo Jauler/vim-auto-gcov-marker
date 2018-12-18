@@ -52,15 +52,16 @@ function gcov_marker#BuildCov(...)
     endif
     let gcno = fnamemodify(gcno[0], ':p')
 
-    silent exe '!pushd ' . g:gcov_marker_path . '; gcov -i -b -m ' . gcno . ' > /dev/null; popd'
+    silent exe '!(cd ' . g:gcov_marker_path . '; gcov -i -b -m ' . gcno . ') > /dev/null'
+    redraw!
 
     let gcov = g:gcov_marker_path . '/' . expand('%:t') . '.gcov'
 
     call gcov_marker#SetCov(gcov)
-    redraw!
 endfunction
 
 function gcov_marker#ClearCov(...)
+    " FIXME: Only gcov tags should be cleared, not all of them
     exe ":sign unplace *"
 endfunction
 
@@ -83,7 +84,14 @@ function gcov_marker#SetCov(...)
 
     " Read files and fillin marks dictionary
     let marks = {}
-    for line in readfile(filename)
+    try
+        let gcovfile = readfile(filename)
+    catch
+        echo "Failed to read gcov file"
+        return
+    endtry
+
+    for line in gcovfile
         let type = split(line, ':')[0]
         let linenum = split(line, '[:,]')[1]
 
