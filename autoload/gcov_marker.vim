@@ -1,17 +1,42 @@
 if exists('g:autoloaded_gcov_marker') || &cp || version < 700
     finish
 else
-    if !exists("g:gcov_marker_covered")
-        let g:gcov_marker_covered = '✓'
+    if !exists("g:gcov_marker_line_covered")
+        let g:gcov_marker_line_covered = '✓'
     endif
-    if !exists("g:gcov_marker_uncovered")
-        let g:gcov_marker_uncovered = '✘'
+    if !exists("g:gcov_marker_line_uncovered")
+        let g:gcov_marker_line_uncovered = '✘'
+    endif
+    if !exists("g:gcov_marker_branch_covered")
+        let g:gcov_marker_branch_covered = '✓✓'
+    endif
+    if !exists("g:gcov_marker_branch_partly_covered")
+        let g:gcov_marker_branch_partly_covered = '✓✘'
+    endif
+    if !exists("g:gcov_marker_branch_uncovered")
+        let g:gcov_marker_branch_uncovered = '✘✘'
     endif
     if !exists("g:gcov_marker_path")
         let g:gcov_marker_path = '.'
     endif
     if !exists("g:gcov_gcno_path")
         let g:gcov_gcno_path = '.'
+    endif
+
+    if !hlexists('GcovLineCovered')
+        highlight GCovLineCovered ctermfg=green guifg=green
+    endif
+    if !hlexists('GcovLineUncovered')
+        highlight GCovLineUncovered ctermfg=red guifg=red
+    endif
+    if !hlexists('GcovBranchCovered')
+        highlight GCovBranchCovered ctermfg=green guifg=green
+    endif
+    if !hlexists('GcovBranchPartlyCovered')
+        highlight GCovBranchPartlyCovered ctermfg=yellow guifg=yellow
+    endif
+    if !hlexists('GcovBranchUncovered')
+        highlight GCovBranchUncovered ctermfg=red guifg=red
     endif
 endif
 
@@ -49,16 +74,12 @@ function gcov_marker#SetCov(...)
     " Clear previous markers.
     call gcov_marker#ClearCov()
 
-    exe ":highlight GcovUncoveredText ctermfg=red guifg=red"
-    exe ":highlight GcovPartlyCoveredText   ctermfg=yellow guifg=yellow"
-    exe ":highlight GcovCoveredText   ctermfg=green guifg=green"
-
     " Prepare signs
-    exe ":sign define gcov_line_covered texthl=GcovCoveredText text=" . g:gcov_marker_covered
-    exe ":sign define gcov_line_uncovered texthl=GcovUncoveredText text=" . g:gcov_marker_uncovered
-    exe ":sign define gcov_branch_covered texthl=GcovCoveredText text=" . g:gcov_marker_covered . g:gcov_marker_covered
-    exe ":sign define gcov_branch_partly_covered texthl=GcovPartlyCoveredText text=" . g:gcov_marker_covered . g:gcov_marker_uncovered
-    exe ":sign define gcov_branch_uncovered texthl=GcovUncoveredText text=" . g:gcov_marker_uncovered . g:gcov_marker_uncovered
+    exe ":sign define gcov_line_covered texthl=GcovLineCovered text=" . g:gcov_marker_line_covered
+    exe ":sign define gcov_line_uncovered texthl=GcovLineUncovered text=" . g:gcov_marker_line_uncovered
+    exe ":sign define gcov_branch_covered texthl=GcovBranchCovered text=" . g:gcov_marker_branch_covered
+    exe ":sign define gcov_branch_partly_covered texthl=GcovBranchPartlyCovered text=" . g:gcov_marker_branch_partly_covered
+    exe ":sign define gcov_branch_uncovered texthl=GcovBranchUncovered text=" . g:gcov_marker_branch_uncovered
 
     " Read files and fillin marks dictionary
     let marks = {}
