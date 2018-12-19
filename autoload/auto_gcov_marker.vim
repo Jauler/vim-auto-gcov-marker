@@ -118,7 +118,7 @@ function auto_gcov_marker#SetCov(...)
                 if !has_key(marks, linenum) || marks[linenum] == 'linecovered' || marks[linenum] == 'branchcovered'
                     let marks[linenum] = 'branchcovered'
                 endif
-                if marks[linenum] == 'lineuncovered' || marks[linenum] == 'branchpartlycovered' || marks[linenum] == 'branchcovered'
+                if marks[linenum] == 'lineuncovered' || marks[linenum] == 'branchpartlycovered' || marks[linenum] == 'branchuncovered'
                     let marks[linenum] = 'branchpartlycovered'
                 endif
 
