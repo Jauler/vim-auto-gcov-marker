@@ -118,16 +118,33 @@ function auto_gcov_marker#SetCov(...)
 
     " Iterate over marks dictionary and place signs
     for [line, marktype] in items(marks)
-        if marktype == 'lineexec'
-            exe ":sign place " . line. " line=" . line . " name=gcov_line_covered file=" . expand("%:p")
-        elseif marktype == 'linenotexec'
-            exe ":sign place " . line . " line=" . line . " name=gcov_line_uncovered file=" . expand("%:p")
-        elseif marktype == 'branchtaken'
-            exe ":sign place " . line . " line=" . line . " name=gcov_branch_covered file=" . expand("%:p")
-        elseif marktype == 'branchnottaken'
-            exe ":sign place " . line . " line=" . line . " name=gcov_branch_partly_covered file=" . expand("%:p")
-        elseif marktype == 'branchnotexec'
-            exe ":sign place " . line . " line=" . line . " name=gcov_branch_uncovered file=" . expand("%:p")
+        if type == 'branch'
+            let branchcoverage = split(line, '[:,]')[2]
+            if branchcoverage == 'notexec'
+                if !has_key(marks, linenum) || marks[linenum] == 'lineuncovered' || marks[linenum] == 'branchnotcovered'
+                    let marks[linenum] = 'branchnotcovered'
+                endif
+                if marks[linenum] == 'linecovered' || marks[linenum] == 'branchpartlycovered' || marks[linenum] == 'branchcovered'
+                    let marks[linenum] = 'branchpartlycovered'
+                endif
+
+            elseif branchcoverage == 'taken'
+                if !has_key(marks, linenum) || marks[linenum] == 'linecovered' || marks[linenum] == 'branchcovered'
+                    let marks[linenum] = 'branchcovered'
+                endif
+                if marks[linenum] == 'lineuncovered' || marks[linenum] == 'branchpartlycovered' || marks[linenum] == 'branchcovered'
+                    let marks[linenum] = 'branchpartlycovered'
+                endif
+
+            elseif branchcoverage == 'nottaken'
+                if !has_key(marks, linenum) || marks[linenum] == 'lineuncovered' || marks[linenum] == 'branchuncovered'
+                    let marks[linenum] = 'branchuncovered'
+                endif
+                if marks[linenum] == 'linecovered' || marks[linenum] == 'branchpartlycovered' || marks[linenum] == 'branchcovered'
+                    let marks[linenum] = 'branchpartlycovered'
+                endif
+
+            endif
         endif
     endfor
 
