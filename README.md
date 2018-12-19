@@ -13,7 +13,6 @@ If you use Vundle plugin manager for vim then auto-gcov-marker can be installed 
 
 ```vimrc
 Plugin 'jauler/vim-auto-gcov-marker'
-
 ```
 to your vimrc and running
 ```
@@ -22,13 +21,13 @@ PluginInstall
 
 ## Usage
 
-This plugin assumes that `gcov` is installed on your machine and binary has been compiled with
-coverage support. After running your test suite use command:
+Assuming that your tests has been built with coverage support, just run
 ```
 GcovBuild
 ```
-In order for plugin to search recursively for gcno and gcda files and build gcov file.
-After building gcov file it will automatically show coverage information for you.
+and coverage information should appear in your vim sign column.
+Under the hood this plugin recursively searches for gcno file and calls `gcov` for it, if it succeeds - generated gcov file is used for showing coverage information.
+Note that plugin assumes that gcov is present on your system.
 
 In order to clear coverage information run:
 ```
@@ -40,7 +39,7 @@ If you would like to specify exact gcov file to use:
 ```
 GcovLoad <filename>.gcov
 ```
-Note that plugin exepects gcov files in intermediate format.
+Note that plugin expects gcov files in intermediate format.
 
 
 ## Configuration
