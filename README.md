@@ -42,6 +42,24 @@ GcovLoad <filename>.gcov
 Note that plugin expects gcov files in intermediate format.
 
 
+## Example
+
+A simple example for test purposes is provided in `test` directory.
+After installing the plugin - go to provided test direcory, build and run:
+```bash
+cd path/to/test/directory/
+make
+./test
+```
+
+Open `test.c` file in vim and issue a command:
+```vimrc
+:GcovBuild
+```
+
+Now You should see something similar to what is provided in the screenshot.
+
+
 ## Configuration
 
 Default markers can be customized using the variables below.
