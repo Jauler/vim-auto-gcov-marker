@@ -5,6 +5,13 @@ source file. It will highlight the covered and uncovered lines and branches.
 
 ![Screenshot](/img/screenshot.png)
 
+The screenshot shows various cases for line and branch coverage:
+* (✓) line covered -- line has been executed at least once
+* (✘) line uncovered -- line has not been executed
+* (✓✓) branch covered -- all branch directions has been taken at least once
+* (✓✘) branch partly covered -- some but not all branch directions has been taken at least once
+* (✘✘) branch uncovered -- none of the branch directions has been executed
+
 This plugin is based on [m42e/vim-gcov-marker](https://github.com/m42e/vim-gcov-marker)
 
 ## Install
