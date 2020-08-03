@@ -44,6 +44,10 @@ function auto_gcov_marker#BuildCov(...)
     let filename = expand('%:t:r')
     let gcno = globpath(g:auto_gcov_marker_gcno_path, '/**/' . filename . '.gcno', 1, 1)
     if len(gcno) == '0'
+        let filename = expand('%:t')
+        let gcno = globpath(g:auto_gcov_marker_gcno_path, '/**/' . filename . '.gcno', 1, 1)
+    endif
+    if len(gcno) == '0'
         echo "gcno file not found"
         return
     elseif len(gcno) != '1'
@@ -56,8 +60,13 @@ function auto_gcov_marker#BuildCov(...)
     redraw!
 
     let gcov = g:auto_gcov_marker_gcov_path . '/' . expand('%:t') . '.gcov'
+    if(!filereadable(gcov))
+        let gcov = g:auto_gcov_marker_gcov_path . '/' . expand('%:t') . '.gcno.gcov'
+    endif
 
-    call auto_gcov_marker#SetCov(gcov)
+    if(filereadable(gcov))
+        call auto_gcov_marker#SetCov(gcov)
+    endif
 endfunction
 
 function auto_gcov_marker#ClearCov(...)
